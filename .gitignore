@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 db.sqlite3
 .env
+.env.prod
 .env.production
 *.xlsx
 staticfiles/
