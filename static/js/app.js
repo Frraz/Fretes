@@ -8,7 +8,6 @@ const vc=v=>v>0.01?'v-pos':v<-0.01?'v-neg':'v-zero';
 const sitB=s=>s==='A RECEBER'?'<span class="badge b-grn">A RECEBER</span>':s==='DEVEDOR'?'<span class="badge b-red">DEVEDOR</span>':'<span class="badge b-blu">QUITADO</span>';
 const staB=s=>s==='FECHADO'?'<span class="badge b-red">FECHADO</span>':s==='LANÇADO'?'<span class="badge b-amb">LANÇADO</span>':'<span class="badge b-blu">EM ABERTO</span>';
 const SI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
-const isMob=()=>window.innerWidth<=640;
 function esc(s){return s.replace(/'/g,"\\'").replace(/"/g,'&quot;')}
 async function api(u){try{return await(await fetch(u)).json()}catch(e){console.error(e);return null}}
 
@@ -60,14 +59,14 @@ function load(){
   ({dashboard:loadDash,motoristas:loadMot,colheita:loadCol,romaneios:loadRom,abastecimentos:loadAb,adiantamentos:loadAd})[P]();
 }
 
-/* ═══ HELPERS UI ═══ */
-/* Wrapper de tabela com scroll horizontal no mobile */
+/* ═══ HELPERS ═══ */
+/* tblWrap: scroll horizontal global (funciona em qualquer breakpoint) */
 function tblWrap(inner,maxH){
-  const h=maxH?`max-height:${maxH};overflow-y:auto;`:'';
-  return `<div class="tbl-scroll-x" style="${h}"><table>${inner}</table></div>`;
+  const style=maxH?`style="max-height:${maxH};overflow-y:auto"`:'';
+  return `<div class="tbl-scroll-x" ${style}><table>${inner}</table></div>`;
 }
 
-/* Card de motorista (usado no mobile) */
+/* Card de motorista — visível só em mobile via CSS */
 function motCard(x){
   return `<div class="mot-card" onclick="openMot(${x.id},'${esc(x.motorista)}','${x.placa}')">
     <div class="mot-card-top">
@@ -110,7 +109,6 @@ async function loadDash(){
   <div class="kpi c-grn"><div class="kpi-label">Saldo</div><div class="kpi-value ${vc(k.saldo_liquido)}">${k.saldo_liquido<0?'- ':''}${fmt(k.saldo_liquido)}</div><div class="kpi-sub">Rom. − descontos</div></div>
   <div class="kpi c-pur"><div class="kpi-label">Motoristas</div><div class="kpi-value" style="color:var(--pur)">${k.qtd_ativos}</div><div class="kpi-sub">${k.qtd_a_receber} receber · ${k.qtd_devedores} devendo</div></div>
 </div>
-
 <div class="g2">
   <div class="card"><div class="card-h"><div class="card-t"><div class="dot grn"></div>Distribuição</div></div>
     <div class="st-row">
@@ -126,7 +124,6 @@ async function loadDash(){
     </div>
   </div>
 </div>
-
 <div class="g21">
   <div class="card"><div class="card-h"><div class="card-t"><div class="dot blu"></div>Saldo por Motorista</div><div class="card-badge">${a.length}</div></div>
     <div class="scroll-t">${s.map(x=>`<div class="bar-row" style="cursor:pointer" onclick="openMot(${x.id},'${esc(x.motorista)}','${x.placa}')"><div class="bar-lbl" title="${x.motorista}">${x.motorista}</div><div class="bar-trk"><div class="bar-fill ${x.saldo>=0?'grn':'red'}" style="width:${(Math.abs(x.saldo)/mx*100).toFixed(1)}%"></div></div><div class="bar-val ${vc(x.saldo)}">${x.saldo<0?'- ':''}${fmtK(x.saldo)}</div></div>`).join('')}</div>
@@ -136,12 +133,11 @@ async function loadDash(){
     `<div class="scroll-t">${d.map((x,i)=>`<div style="padding:9px;border-bottom:1px solid var(--bd);${i===0?'background:var(--redB);border-radius:6px 6px 0 0':''};cursor:pointer" onclick="openMot(${x.id},'${esc(x.motorista)}','${x.placa}')"><div style="display:flex;justify-content:space-between;align-items:center;gap:5px"><div style="min-width:0"><div style="font-weight:600;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.motorista}</div><div class="mono" style="font-size:10px;color:var(--txm);margin-top:1px">${x.placa}</div></div><div class="mono v-neg" style="font-size:12px;font-weight:600;flex-shrink:0">- ${fmt(Math.abs(x.saldo))}</div></div>${x.adiantamentos>0?`<div style="font-size:10px;color:var(--amb);margin-top:2px">Adiant: ${fmtK(x.adiantamentos)}</div>`:''}</div>`).join('')}</div>`}
   </div>
 </div>
-
 <div class="card">
   <div class="card-h"><div class="card-t"><div class="dot pur"></div>Tabela Completa</div></div>
   <div class="search-bar">${SI}<input placeholder="Buscar motorista ou placa..." oninput="filtDash(this)"></div>
   <div id="dash-cards">${s.map(x=>motCard(x)).join('')}</div>
-  <div class="tbl-scroll-x" style="max-height:440px;overflow-y:auto">
+  <div class="tbl-desk-only tbl-scroll-x" style="max-height:440px;overflow-y:auto">
     <table id="td">
       <thead><tr><th>Placa</th><th>Motorista</th><th class="tr">Rom.</th><th class="tr">Abast.</th><th class="tr">Adiant.</th><th class="tr">Saldo</th><th class="tc">Sit.</th></tr></thead>
       <tbody id="td-body">${tblRows}</tbody>
@@ -151,7 +147,6 @@ async function loadDash(){
 </div>`;
 }
 
-/* Busca unificada dashboard */
 function filtDash(inp){
   const q=inp.value.toLowerCase();
   document.querySelectorAll('#dash-cards .mot-card').forEach(c=>{c.style.display=c.textContent.toLowerCase().includes(q)?'':'none'});
@@ -190,7 +185,6 @@ function closeModal(){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
-/* Fechar modal ao arrastar para baixo (mobile) */
 (function(){
   let sy=0;
   document.addEventListener('touchstart',e=>{if(document.getElementById('modal-overlay').classList.contains('show'))sy=e.touches[0].clientY},{passive:true});
@@ -208,9 +202,9 @@ async function loadMot(){
   document.getElementById('content').innerHTML=`
 <div class="card">
   <div class="card-h"><div class="card-t"><div class="dot pur"></div>Motoristas</div><div class="card-badge" id="mot-cnt">${a.length}</div></div>
-  <div class="search-bar">${SI}<input placeholder="Buscar..." oninput="filtMot(this,${JSON.stringify(a).replace(/"/g,'&quot;')})"></div>
+  <div class="search-bar">${SI}<input placeholder="Buscar..." oninput="filtMot(this)" data-all='${JSON.stringify(a).replace(/'/g,"&#39;")}'></div>
   <div id="mot-cards">${a.map(x=>motCard(x)).join('')}</div>
-  <div class="tbl-scroll-x" style="max-height:600px;overflow-y:auto">
+  <div class="tbl-desk-only tbl-scroll-x" style="max-height:600px;overflow-y:auto">
     <table id="tm">
       <thead><tr><th>Placa</th><th>Motorista</th><th class="tr">Rom.</th><th class="tr">Abast.</th><th class="tr">Adiant.</th><th class="tr">Saldo</th><th class="tc">Sit.</th></tr></thead>
       <tbody id="tm-body">${a.map(x=>`<tr class="click" onclick="openMot(${x.id},'${esc(x.motorista)}','${x.placa}')"><td class="mono tb">${x.placa}</td><td>${x.motorista}</td><td class="mono tr">${x.romaneios?fmt(x.romaneios):'—'}</td><td class="mono tr v-amb">${x.abastecimentos?fmt(x.abastecimentos):'—'}</td><td class="mono tr v-neg">${x.adiantamentos?fmt(x.adiantamentos):'—'}</td><td class="mono tr tb ${vc(x.saldo)}">${x.saldo<0?'- ':''}${fmt(x.saldo)}</td><td class="tc">${sitB(x.situacao)}</td></tr>`).join('')}</tbody>
@@ -219,9 +213,10 @@ async function loadMot(){
 </div>`;
 }
 
-function filtMot(inp,data){
+function filtMot(inp){
   const q=inp.value.toLowerCase();
-  const f=data.filter(x=>(x.motorista+x.placa).toLowerCase().includes(q));
+  const all=JSON.parse(inp.dataset.all);
+  const f=all.filter(x=>(x.motorista+x.placa).toLowerCase().includes(q));
   document.getElementById('mot-cnt').textContent=f.length;
   document.getElementById('mot-cards').innerHTML=f.map(x=>motCard(x)).join('');
   document.querySelectorAll('#tm-body tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'':'none'});
@@ -243,14 +238,9 @@ async function loadCol(){
     <div class="scroll-t">${d.talhoes.map(x=>`<div class="bar-row"><div class="bar-lbl" title="${x.talhao}">${x.talhao}</div><div class="bar-trk"><div class="bar-fill eme" style="width:${(x.sacas/mx*100).toFixed(1)}%"></div></div><div class="bar-val v-eme">${fmtN(x.sacas)}</div></div>`).join('')}</div>
   </div>
   <div class="card"><div class="card-h"><div class="card-t"><div class="dot blu"></div>Detalhes</div></div>
-    <div class="tbl-scroll-x">
-      <table><thead><tr><th>Talhão</th><th class="tr">Sacas</th><th class="tr">Peso</th><th class="tr">Viag.</th><th class="tr">Frete</th></tr></thead>
-      <tbody>${d.talhoes.map(x=>`<tr><td class="tb">${x.talhao}</td><td class="mono tr tb v-eme">${fmtN(x.sacas)}</td><td class="mono tr">${fmtN(x.peso_kg)}</td><td class="mono tr">${x.viagens}</td><td class="mono tr">${fmt(x.valor_total)}</td></tr>`).join('')}</tbody>
-      <tfoot><tr style="border-top:2px solid var(--bd)"><td class="tb">TOTAL</td><td class="mono tr tb v-eme">${fmtN(t.sacas)}</td><td class="mono tr tb">${fmtN(t.peso_kg)}</td><td class="mono tr tb">${t.viagens}</td><td class="mono tr tb">${fmt(t.valor_total)}</td></tr></tfoot>
-      </table>
-    </div>
+    ${tblWrap(`<thead><tr><th>Talhão</th><th class="tr">Sacas</th><th class="tr">Peso</th><th class="tr">Viag.</th><th class="tr">Frete</th></tr></thead><tbody>${d.talhoes.map(x=>`<tr><td class="tb">${x.talhao}</td><td class="mono tr tb v-eme">${fmtN(x.sacas)}</td><td class="mono tr">${fmtN(x.peso_kg)}</td><td class="mono tr">${x.viagens}</td><td class="mono tr">${fmt(x.valor_total)}</td></tr>`).join('')}</tbody><tfoot><tr style="border-top:2px solid var(--bd)"><td class="tb">TOTAL</td><td class="mono tr tb v-eme">${fmtN(t.sacas)}</td><td class="mono tr tb">${fmtN(t.peso_kg)}</td><td class="mono tr tb">${t.viagens}</td><td class="mono tr tb">${fmt(t.valor_total)}</td></tr></tfoot>`)}
   </div>
-</div>`
+</div>`;
 }
 
 /* ═══ ROMANEIOS ═══ */
@@ -274,9 +264,7 @@ async function loadRom(){
     <select class="filter-select" id="fo" onchange="fR()"><option value="">Origens</option>${(f?.origens||[]).map(t=>'<option>'+t+'</option>').join('')}</select>
   </div>
   <div class="search-bar">${SI}<input placeholder="Buscar..." id="rs" oninput="fR()"></div>
-  <div class="tbl-scroll-x" style="max-height:520px;overflow-y:auto">
-    <table><thead><tr><th>Data</th><th>NF</th><th>Talhão</th><th>Motorista</th><th>Placa</th><th class="tr">Sacas</th><th class="tr">Valor</th><th class="tc">St.</th></tr></thead><tbody id="rb"></tbody></table>
-  </div>
+  ${tblWrap(`<thead><tr><th>Data</th><th>NF</th><th>Talhão</th><th>Motorista</th><th>Placa</th><th class="tr">Sacas</th><th class="tr">Valor</th><th class="tc">St.</th></tr></thead><tbody id="rb"></tbody>`,'520px')}
 </div>`;
   rR(d);
 }
@@ -295,13 +283,9 @@ async function loadAb(){
 </div>
 <div class="card">
   <div class="card-h"><div class="card-t"><div class="dot amb"></div>Abastecimentos</div><div class="card-badge">${d.length}</div></div>
-  <div class="search-bar">${SI}<input placeholder="Buscar..." oninput="filt(this,'ta')"></div>
-  <div class="tbl-scroll-x" style="max-height:520px;overflow-y:auto">
-    <table id="ta"><thead><tr><th>Data</th><th>Motorista</th><th>Placa</th><th class="tr">Litros</th><th class="tr">Vl.Desc.</th><th class="tc">St.</th></tr></thead>
-    <tbody>${d.map(x=>`<tr><td class="mono">${fmtD(x.data_requisicao)}</td><td>${x.motorista}</td><td class="mono tb">${x.placa}</td><td class="mono tr">${x.qtd_litros.toLocaleString('pt-BR',{minimumFractionDigits:1})}</td><td class="mono tr tb">${fmt(x.vl_desc_total)}</td><td class="tc">${staB(x.status)}</td></tr>`).join('')}</tbody>
-    </table>
-  </div>
-</div>`
+  <div class="search-bar">${SI}<input placeholder="Buscar..." oninput="filt(this,'ta-body')"></div>
+  ${tblWrap(`<thead><tr><th>Data</th><th>Motorista</th><th>Placa</th><th class="tr">Litros</th><th class="tr">Vl.Desc.</th><th class="tc">St.</th></tr></thead><tbody id="ta-body">${d.map(x=>`<tr><td class="mono">${fmtD(x.data_requisicao)}</td><td>${x.motorista}</td><td class="mono tb">${x.placa}</td><td class="mono tr">${x.qtd_litros.toLocaleString('pt-BR',{minimumFractionDigits:1})}</td><td class="mono tr tb">${fmt(x.vl_desc_total)}</td><td class="tc">${staB(x.status)}</td></tr>`).join('')}</tbody>`,'520px')}
+</div>`;
 }
 
 /* ═══ ADIANTAMENTOS ═══ */
@@ -315,16 +299,15 @@ async function loadAd(){
 </div>
 <div class="card">
   <div class="card-h"><div class="card-t"><div class="dot red"></div>Adiantamentos</div><div class="card-badge">${d.length}</div></div>
-  <div class="search-bar">${SI}<input placeholder="Buscar..." oninput="filt(this,'tad')"></div>
-  <div class="tbl-scroll-x" style="max-height:520px;overflow-y:auto">
-    <table id="tad"><thead><tr><th>Data</th><th>Motorista</th><th>Placa</th><th>Descrição</th><th class="tr">Valor</th><th class="tc">St.</th></tr></thead>
-    <tbody>${d.map(x=>`<tr><td class="mono">${fmtD(x.data)}</td><td>${x.motorista}</td><td class="mono tb">${x.placa}</td><td style="max-width:130px;overflow:hidden;text-overflow:ellipsis" title="${x.descricao}">${x.descricao}</td><td class="mono tr tb">${fmt(x.valor)}</td><td class="tc">${staB(x.status)}</td></tr>`).join('')}</tbody>
-    </table>
-  </div>
-</div>`
+  <div class="search-bar">${SI}<input placeholder="Buscar..." oninput="filt(this,'tad-body')"></div>
+  ${tblWrap(`<thead><tr><th>Data</th><th>Motorista</th><th>Placa</th><th>Descrição</th><th class="tr">Valor</th><th class="tc">St.</th></tr></thead><tbody id="tad-body">${d.map(x=>`<tr><td class="mono">${fmtD(x.data)}</td><td>${x.motorista}</td><td class="mono tb">${x.placa}</td><td style="max-width:130px;overflow:hidden;text-overflow:ellipsis" title="${x.descricao}">${x.descricao}</td><td class="mono tr tb">${fmt(x.valor)}</td><td class="tc">${staB(x.status)}</td></tr>`).join('')}</tbody>`,'520px')}
+</div>`;
 }
 
 /* ═══ UTILS ═══ */
-function filt(i,t){const q=i.value.toLowerCase();document.querySelectorAll('#'+t+' tbody tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'':'none'})}
+function filt(inp,tbodyId){
+  const q=inp.value.toLowerCase();
+  document.querySelectorAll('#'+tbodyId+' tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'':'none'});
+}
 
 load();

@@ -105,8 +105,10 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .card-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--s2);color:var(--txd);white-space:nowrap}
 
 /* ═══════ TABLE ═══════ */
-.tbl-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
-.tbl-wrap::-webkit-scrollbar{height:3px}.tbl-wrap::-webkit-scrollbar-thumb{background:var(--bdl);border-radius:3px}
+/* tbl-scroll-x: definido GLOBALMENTE para funcionar em todos os breakpoints */
+.tbl-scroll-x{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.tbl-scroll-x::-webkit-scrollbar{height:3px}
+.tbl-scroll-x::-webkit-scrollbar-thumb{background:var(--bdl);border-radius:3px}
 .scroll-t{max-height:400px;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .scroll-t::-webkit-scrollbar{width:3px;height:3px}
 .scroll-t::-webkit-scrollbar-thumb{background:var(--bdl);border-radius:3px}
@@ -174,9 +176,6 @@ tr.click{cursor:pointer}tr.click:active td{background:var(--s3)}
 .modal-x:hover{background:var(--s2)}.modal-x:active{background:var(--s3)}
 .modal-body{padding:16px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 
-/* ═══════ PULL-TO-REFRESH INDICATOR ═══════ */
-.ptr-hint{display:none;text-align:center;font-size:10px;color:var(--txm);padding:6px;letter-spacing:.3px}
-
 /* ═══════ EMPTY STATE ═══════ */
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 16px;color:var(--txm);font-size:12px;gap:8px;text-align:center}
 .empty svg{opacity:.3}
@@ -193,13 +192,13 @@ summary::before{content:'+ ';color:var(--txm);font-weight:400}
 details[open] summary::before{content:'- '}
 .note{font-size:10px;color:var(--txm);border-left:2px solid var(--bd);padding-left:9px;margin-bottom:13px;line-height:1.7}
 
-/* ═══════ MOTORISTA CARD (mobile) ═══════ */
-.mot-card{display:none;background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:12px;margin-bottom:8px;cursor:pointer;transition:border-color .12s,background .06s;-webkit-tap-highlight-color:transparent;active-color:var(--s3)}
+/* ═══════ MOTORISTA CARD (oculto por padrão, visível só mobile) ═══════ */
+.mot-card{display:none;background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:12px;margin-bottom:8px;cursor:pointer;transition:border-color .12s,background .06s;-webkit-tap-highlight-color:transparent}
 .mot-card:active{background:var(--s2)}
 .mot-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
 .mot-card-name{font-size:13px;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mot-card-placa{font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;padding:2px 6px;color:var(--txd);white-space:nowrap;flex-shrink:0}
-.mot-card-row{display:flex;gap:8px;font-size:11px}
+.mot-card-row{display:flex;gap:8px}
 .mot-card-item{flex:1;display:flex;flex-direction:column;gap:1px}
 .mot-card-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--txm)}
 .mot-card-val{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600}
@@ -222,45 +221,29 @@ details[open] summary::before{content:'- '}
 /* ═══════ MOBILE (≤640px) ═══════ */
 @media(max-width:640px){
   html{font-size:13px}
-
-  /* Topbar */
   .topbar{height:46px;padding:0 10px}
   .topbar-title{font-size:13px}
-
-  /* Abas de grupo — compactar */
   .tabs{padding:2px}
   .tab{padding:4px 9px;font-size:10px;gap:3px}
   .tdot{width:5px;height:5px}
-
-  /* Content com espaço para bnav */
-  .content{padding:10px 8px;padding-bottom:72px}
-
-  /* KPIs — 2 colunas */
+  .content{padding:10px 8px 76px}
   .kpi-grid{grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
   .kpi{padding:10px 11px}
   .kpi-value{font-size:14px}
   .kpi-label{font-size:8px;letter-spacing:.5px}
   .kpi-sub{font-size:9px;margin-top:3px}
-
-  /* Cards */
   .card{padding:11px}
   .card-h{margin-bottom:10px}
   .card-t{font-size:12px}
-
-  /* Status cards */
   .st-num{font-size:20px}
   .st-card{padding:11px 7px}
   .st-lbl{font-size:8.5px}
   .st-val{font-size:10px}
-
-  /* Bar chart */
   .bar-lbl{width:68px;font-size:10px}
   .bar-val{width:62px;font-size:9px}
-
-  /* Sidebar */
   .sidebar{width:min(280px,85vw)}
 
-  /* Modal — sheet bottom */
+  /* Modal bottom sheet */
   .modal-overlay{align-items:flex-end;padding:0}
   .modal{border-radius:16px 16px 0 0;max-height:92dvh;animation:sheetUp .22s ease}
   @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
@@ -272,47 +255,42 @@ details[open] summary::before{content:'- '}
   .modal-body .kpi{padding:9px}
   .modal-body .kpi-value{font-size:12px}
 
-  /* Filtros */
   .filter-row{gap:6px}
   .filter-select{flex:1 1 calc(50% - 3px);max-width:100%;font-size:11px;padding:9px 24px 9px 9px}
   .search-bar input{font-size:14px;padding:10px 0}
 
-  /* Tabelas — scroll horizontal com indicador */
-  .scroll-t{max-height:none;overflow:visible}
-  .tbl-scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;border-radius:6px}
-  .tbl-scroll-x::-webkit-scrollbar{height:2px}.tbl-scroll-x::-webkit-scrollbar-thumb{background:var(--bdl);border-radius:2px}
   table{min-width:360px}
   th{padding:7px 8px;font-size:8.5px}
   td{padding:7px 8px;font-size:11.5px}
 
-  /* Cards de motorista (substituem tabela no mobile) */
+  /* Ativar cards de motorista */
   .mot-card{display:block}
+  /* Ocultar tabela desktop onde há cards mobile */
+  .tbl-desk-only{display:none}
 
   /* Bottom nav */
-  .bnav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--s1);border-top:1px solid var(--bd);z-index:150;padding:2px 0;padding-bottom:max(4px,env(safe-area-inset-bottom));justify-content:space-around;box-shadow:0 -1px 6px rgba(0,0,0,.04)}
+  .bnav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--s1);border-top:1px solid var(--bd);z-index:150;padding:2px 0 max(4px,env(safe-area-inset-bottom));justify-content:space-around;box-shadow:0 -1px 6px rgba(0,0,0,.04)}
   [data-theme="dark"] .bnav{box-shadow:0 -1px 6px rgba(0,0,0,.2)}
   .bnav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:var(--txm);font-family:inherit;font-size:9px;font-weight:500;padding:6px 4px 4px;cursor:pointer;-webkit-tap-highlight-color:transparent;flex:1;transition:color .12s;min-width:0}
-  .bnav-btn svg{width:20px;height:20px;transition:transform .12s,opacity .12s}
-  .bnav-btn span{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .bnav-btn svg{width:20px;height:20px;transition:transform .12s}
+  .bnav-btn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
   .bnav-btn.active{color:var(--blu)}
   .bnav-btn.active svg{transform:scale(1.07)}
   .bnav-btn:active{opacity:.5}
-
-  /* Details no modal */
   details{margin-bottom:10px}
   summary{font-size:11.5px;padding:8px 0}
 }
 
 /* ═══════ EXTRA SMALL (≤380px) ═══════ */
 @media(max-width:380px){
-  .kpi-grid{grid-template-columns:1fr 1fr;gap:5px}
+  .kpi-grid{gap:5px}
   .kpi{padding:8px 9px}
   .kpi-value{font-size:13px}
   .tab{padding:3px 7px;font-size:9.5px}
   .st-row{grid-template-columns:1fr 1fr}
   .st-num{font-size:18px}
   .st-card{padding:10px 6px}
-  table{min-width:330px}
+  table{min-width:320px}
   th{padding:6px 7px;font-size:8px}
   td{padding:6px 7px;font-size:11px}
   .filter-select{flex:1 1 100%;max-width:100%}
@@ -330,12 +308,4 @@ details[open] summary::before{content:'- '}
   .kpi-grid{grid-template-columns:repeat(4,1fr);margin-bottom:10px}
   .kpi{padding:8px 10px}
   .kpi-value{font-size:13px}
-}
-
-/* ═══════ SAFE AREA (notch/home bar) ═══════ */
-@supports(padding-bottom:env(safe-area-inset-bottom)){
-  .content{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
-  @media(max-height:500px) and (orientation:landscape){
-    .content{padding-bottom:12px}
-  }
 }
