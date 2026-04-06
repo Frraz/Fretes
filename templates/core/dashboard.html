@@ -18,103 +18,105 @@
 
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
-<aside class="sidebar" id="sidebar">
+<aside class="sidebar" id="sidebar" role="navigation" aria-label="Menu principal">
   <div class="sb-brand">
-    <div class="sb-mark">F</div>
+    <div class="sb-mark" aria-hidden="true">F</div>
     <div><div class="sb-name">SJ & SF</div><div class="sb-sub">Controle de Fretes</div></div>
   </div>
   <nav class="sb-nav">
     <div class="sb-section">Menu</div>
-    <a class="sb-link active" data-page="dashboard" onclick="nav('dashboard')">
-      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="4" rx="1"/><rect x="14" y="10" width="7" height="11" rx="1"/><rect x="3" y="13" width="7" height="8" rx="1"/></svg>
+    <a class="sb-link active" data-page="dashboard" onclick="nav('dashboard')" role="button" tabindex="0">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="4" rx="1"/><rect x="14" y="10" width="7" height="11" rx="1"/><rect x="3" y="13" width="7" height="8" rx="1"/></svg>
       <span>Painel</span>
     </a>
-    <a class="sb-link" data-page="motoristas" onclick="nav('motoristas')">
-      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    <a class="sb-link" data-page="motoristas" onclick="nav('motoristas')" role="button" tabindex="0">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
       <span>Motoristas</span>
     </a>
-    <a class="sb-link" data-page="colheita" onclick="nav('colheita')">
-      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    <a class="sb-link" data-page="colheita" onclick="nav('colheita')" role="button" tabindex="0">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
       <span>Colheita</span>
     </a>
-    <a class="sb-link" data-page="romaneios" onclick="nav('romaneios')">
-      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    <a class="sb-link" data-page="romaneios" onclick="nav('romaneios')" role="button" tabindex="0">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       <span>Romaneios</span>
     </a>
-    <a class="sb-link" data-page="abastecimentos" onclick="nav('abastecimentos')">
-      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h18"/><path d="M6 18V2"/><path d="M18 18V8"/><path d="M6 8h12"/><path d="M6 2h6v6"/></svg>
+    <a class="sb-link" data-page="abastecimentos" onclick="nav('abastecimentos')" role="button" tabindex="0">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 22h18"/><path d="M6 18V2"/><path d="M18 18V8"/><path d="M6 8h12"/><path d="M6 2h6v6"/></svg>
       <span>Abastecimentos</span>
     </a>
-    <a class="sb-link" data-page="adiantamentos" onclick="nav('adiantamentos')">
-      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    <a class="sb-link" data-page="adiantamentos" onclick="nav('adiantamentos')" role="button" tabindex="0">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
       <span>Adiantamentos</span>
     </a>
   </nav>
   <div class="sb-footer">
-    <button class="sb-btn" onclick="toggleTheme()" title="Alternar tema">
-      <svg class="t-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-      <svg class="t-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    <button class="sb-btn" onclick="toggleTheme()" title="Alternar tema" aria-label="Alternar entre tema claro e escuro">
+      <svg class="t-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="t-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
       <span class="sb-btn-label" id="theme-label">Tema escuro</span>
     </button>
-    <button class="sb-btn" onclick="syncData()" id="sync-btn" title="Sincronizar">
-      <svg class="sync-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+    <button class="sb-btn" onclick="syncData()" id="sync-btn" title="Sincronizar dados" aria-label="Sincronizar dados">
+      <svg class="sync-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
       <span id="sync-text">Sincronizar</span>
     </button>
-    <div class="sb-info">
-      <span class="sb-dot"></span>
+    <div class="sb-info" aria-live="polite" aria-label="Última atualização">
+      <span class="sb-dot" aria-hidden="true"></span>
       <span id="last-update">{% if last_import %}{{ last_import.timestamp|date:"d/m/Y H:i" }}{% else %}—{% endif %}</span>
     </div>
   </div>
 </aside>
 
-<main class="main">
+<main class="main" id="main-content">
   <header class="topbar">
     <div class="topbar-l">
-      <button class="burger" onclick="openSidebar()" aria-label="Menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+      <button class="burger" onclick="openSidebar()" aria-label="Abrir menu" aria-expanded="false" id="burger-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
       </button>
       <h1 class="topbar-title" id="page-title">Painel Geral</h1>
     </div>
     <div class="topbar-r">
-      <div class="tabs">
-        <button class="tab active" data-grupo="ALL" onclick="setGrupo('ALL')">Todos</button>
-        <button class="tab" data-grupo="SF" onclick="setGrupo('SF')"><i class="tdot sf"></i>SF</button>
-        <button class="tab" data-grupo="SJ" onclick="setGrupo('SJ')"><i class="tdot sj"></i>SJ</button>
+      <div class="tabs" role="group" aria-label="Filtrar por grupo">
+        <button class="tab active" data-grupo="ALL" onclick="setGrupo('ALL')" aria-pressed="true">Todos</button>
+        <button class="tab" data-grupo="SF" onclick="setGrupo('SF')" aria-pressed="false"><i class="tdot sf" aria-hidden="true"></i>SF</button>
+        <button class="tab" data-grupo="SJ" onclick="setGrupo('SJ')" aria-pressed="false"><i class="tdot sj" aria-hidden="true"></i>SJ</button>
       </div>
     </div>
   </header>
-  <div class="content" id="content"><div class="loading"><div class="spinner"></div>Carregando...</div></div>
+  <div class="content" id="content" role="main" aria-live="polite" aria-busy="true">
+    <div class="loading"><div class="spinner" aria-hidden="true"></div>Carregando...</div>
+  </div>
 </main>
 
-<nav class="bnav" id="bnav">
-  <button class="bnav-btn active" data-page="dashboard" onclick="nav('dashboard')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="4" rx="1"/><rect x="14" y="10" width="7" height="11" rx="1"/><rect x="3" y="13" width="7" height="8" rx="1"/></svg>
+<nav class="bnav" id="bnav" aria-label="Navegação rápida">
+  <button class="bnav-btn active" data-page="dashboard" onclick="nav('dashboard')" aria-label="Painel">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="4" rx="1"/><rect x="14" y="10" width="7" height="11" rx="1"/><rect x="3" y="13" width="7" height="8" rx="1"/></svg>
     <span>Painel</span>
   </button>
-  <button class="bnav-btn" data-page="motoristas" onclick="nav('motoristas')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+  <button class="bnav-btn" data-page="motoristas" onclick="nav('motoristas')" aria-label="Motoristas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
     <span>Motoristas</span>
   </button>
-  <button class="bnav-btn" data-page="colheita" onclick="nav('colheita')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
+  <button class="bnav-btn" data-page="colheita" onclick="nav('colheita')" aria-label="Colheita">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
     <span>Colheita</span>
   </button>
-  <button class="bnav-btn" data-page="romaneios" onclick="nav('romaneios')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+  <button class="bnav-btn" data-page="romaneios" onclick="nav('romaneios')" aria-label="Romaneios">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
     <span>Romaneios</span>
   </button>
-  <button class="bnav-btn" onclick="openSidebar()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+  <button class="bnav-btn" onclick="openSidebar()" aria-label="Mais opções">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
     <span>Mais</span>
   </button>
 </nav>
 
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-head">
       <h2 id="modal-title">Detalhe</h2>
-      <button class="modal-x" onclick="closeModal()" aria-label="Fechar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <button class="modal-x" onclick="closeModal()" aria-label="Fechar modal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="modal-body" id="modal-body"></div>
@@ -122,8 +124,20 @@
 </div>
 
 <script>
-function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sidebar-overlay').classList.add('show')}
-function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebar-overlay').classList.remove('show')}
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('show');
+  document.getElementById('burger-btn').setAttribute('aria-expanded','true');
+  document.body.style.overflow='hidden';
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+  document.getElementById('burger-btn').setAttribute('aria-expanded','false');
+  document.body.style.overflow='';
+}
+/* Fechar sidebar com Escape */
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.getElementById('sidebar').classList.contains('open'))closeSidebar()});
 </script>
 <script src="{% static 'js/app.js' %}"></script>
 </body>
