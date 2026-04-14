@@ -40,10 +40,10 @@ const sitB = s =>
 /** Badge HTML para status do registro (FECHADO / LANÇADO / EM ABERTO) */
 const staB = s =>
   s === 'FECHADO'
-    ? '<span class="badge b-red">FECHADO</span>'
+    ? '<span class="badge b-grn">FECHADO</span>'
     : s === 'LANÇADO'
       ? '<span class="badge b-amb">LANÇADO</span>'
-      : '<span class="badge b-blu">EM ABERTO</span>';
+      : '<span class="badge b-ylw">EM ABERTO</span>';
 
 /** Ícone SVG de lupa para barras de busca */
 const SI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
@@ -51,6 +51,23 @@ const SI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wi
 /** Escapa aspas para uso seguro em atributos onclick inline */
 function esc(s) {
   return s.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+/**
+ * Gera HTML de estado vazio para listas e tabelas sem dados.
+ * @param {string} title - Mensagem principal
+ * @param {string} sub   - Subtítulo opcional
+ */
+function emptyState(title, sub = '') {
+  return `<div class="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M3 7h18M3 12h18M3 17h18" stroke-linecap="round"/>
+      <rect x="2" y="4" width="20" height="16" rx="2"/>
+      <path d="M9 12h6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <p class="empty-state-title">${title}</p>
+    ${sub ? `<p class="empty-state-sub">${sub}</p>` : ''}
+  </div>`;
 }
 
 /** Busca JSON de uma URL; retorna null em caso de erro de rede */
@@ -196,6 +213,12 @@ async function loadDash() {
   const mx = Math.max(...a.map(x => Math.abs(x.saldo)), 1);
 
   document.getElementById('content').innerHTML = `
+<div class="kpi-hl">
+  <div class="kpi c-grn"><div class="kpi-label">A Receber</div><div class="kpi-value v-pos">${fmt(k.total_a_receber)}</div><div class="kpi-sub">${k.qtd_a_receber} motorista${k.qtd_a_receber !== 1 ? 's' : ''}</div></div>
+  <div class="kpi c-red"><div class="kpi-label">Devedores</div><div class="kpi-value v-neg">${fmt(k.total_devendo)}</div><div class="kpi-sub">${k.qtd_devedores} motorista${k.qtd_devedores !== 1 ? 's' : ''}</div></div>
+  <div class="kpi c-red"><div class="kpi-label">Adiantamentos</div><div class="kpi-value v-neg">${fmt(k.total_adiantamentos)}</div><div class="kpi-sub">em aberto</div></div>
+  <div class="kpi c-amb"><div class="kpi-label">Abastecimentos</div><div class="kpi-value v-amb">${fmt(k.total_abastecimentos)}</div><div class="kpi-sub">em aberto</div></div>
+</div>
 <div class="kpi-grid">
   <div class="kpi c-blu"><div class="kpi-label">Romaneios</div><div class="kpi-value v-blu">${fmt(k.total_romaneios)}</div><div class="kpi-sub">${r.resumo.filter(x => x.romaneios > 0).length} motoristas</div></div>
   <div class="kpi c-amb"><div class="kpi-label">Abastecimentos</div><div class="kpi-value v-amb">${fmt(k.total_abastecimentos)}</div><div class="kpi-sub">${k.total_descontos > 0 ? ((k.total_abastecimentos / k.total_descontos) * 100).toFixed(0) + '% descontos' : ''}</div></div>
@@ -282,6 +305,10 @@ async function loadMot() {
   const d = await api('/api/resumo/?grupo=' + G);
   if (!d) return;
   const a = d.resumo.filter(x => x.situacao !== 'QUITADO').sort((a, b) => b.saldo - a.saldo);
+  if (!a.length) {
+    document.getElementById('content').innerHTML = `<div class="card">${emptyState('Nenhum motorista com saldo em aberto', 'Todos os motoristas estão quitados para o filtro selecionado.')}</div>`;
+    return;
+  }
   document.getElementById('content').innerHTML = `
 <div class="card">
   <div class="card-h"><div class="card-t"><div class="dot pur"></div>Motoristas</div><div class="card-badge">${a.length}</div></div>
@@ -301,6 +328,10 @@ async function loadMot() {
 async function loadCol() {
   const d = await api('/api/colheita/?grupo=' + G);
   if (!d) return;
+  if (!d.talhoes.length) {
+    document.getElementById('content').innerHTML = `<div class="card">${emptyState('Nenhum talhão encontrado', 'Não há romaneios com talhão registrado para o filtro selecionado.')}</div>`;
+    return;
+  }
   const t  = d.totais;
   const mx = Math.max(...d.talhoes.map(x => x.sacas), 1);
   document.getElementById('content').innerHTML = `
@@ -394,7 +425,9 @@ function fR() {
 
 /** Renderiza as linhas da tabela de romaneios com os dados filtrados */
 function rR(d) {
-  document.getElementById('rb').innerHTML = d.map(x => `<tr><td class="mono">${fmtD(x.data)}</td><td class="mono">${x.nota_fiscal}</td><td>${x.talhao || '—'}</td><td>${x.motorista}</td><td class="mono tb">${x.placa}</td><td class="mono tr v-eme">${x.sacas.toFixed(0)}</td><td class="mono tr tb">${fmt(x.valor_total)}</td><td class="tc">${staB(x.status)}</td></tr>`).join('');
+  document.getElementById('rb').innerHTML = d.length
+    ? d.map(x => `<tr><td class="mono">${fmtD(x.data)}</td><td class="mono">${x.nota_fiscal}</td><td>${x.talhao || '—'}</td><td>${x.motorista}</td><td class="mono tb">${x.placa}</td><td class="mono tr v-eme">${x.sacas.toFixed(0)}</td><td class="mono tr tb">${fmt(x.valor_total)}</td><td class="tc">${staB(x.status)}</td></tr>`).join('')
+    : `<tr><td colspan="8" class="empty-cell">Nenhum resultado para os filtros selecionados.</td></tr>`;
 }
 
 // ─── ABASTECIMENTOS ───────────────────────────────────────────────────────────
@@ -403,6 +436,10 @@ function rR(d) {
 async function loadAb() {
   const d = await api('/api/abastecimentos/?grupo=' + G);
   if (!d) return;
+  if (!d.length) {
+    document.getElementById('content').innerHTML = `<div class="card">${emptyState('Nenhum abastecimento encontrado', 'Não há registros de abastecimento para o filtro selecionado.')}</div>`;
+    return;
+  }
   const a = d.filter(x => x.status !== 'FECHADO');
   const t = a.reduce((s, x) => s + x.vl_desc_total, 0);
   const l = a.reduce((s, x) => s + x.qtd_litros,    0);
@@ -430,6 +467,10 @@ async function loadAb() {
 async function loadAd() {
   const d = await api('/api/adiantamentos/?grupo=' + G);
   if (!d) return;
+  if (!d.length) {
+    document.getElementById('content').innerHTML = `<div class="card">${emptyState('Nenhum adiantamento encontrado', 'Não há registros de adiantamento para o filtro selecionado.')}</div>`;
+    return;
+  }
   const a = d.filter(x => x.status !== 'FECHADO');
   const t = a.reduce((s, x) => s + x.valor, 0);
   document.getElementById('content').innerHTML = `
