@@ -10,6 +10,7 @@
   --amb:#936e1e;--ambB:rgba(147,110,30,.05);--ambD:rgba(147,110,30,.12);
   --pur:#5e45a0;--purB:rgba(94,69,160,.04);--purD:rgba(94,69,160,.10);
   --eme:#2a6a50;--emeB:rgba(42,106,80,.05);--emeD:rgba(42,106,80,.12);
+  --ylw:#8a7000;--ylwB:rgba(138,112,0,.06);--ylwD:rgba(138,112,0,.16);
   --sh:0 1px 2px rgba(0,0,0,.04);--shm:0 2px 8px rgba(0,0,0,.05);
 }
 /* ═══════ DARK ═══════ */
@@ -24,6 +25,7 @@
   --amb:#c69e4c;--ambB:rgba(198,158,76,.05);--ambD:rgba(198,158,76,.10);
   --pur:#9886c6;--purB:rgba(152,134,198,.05);--purD:rgba(152,134,198,.10);
   --eme:#6cb494;--emeB:rgba(108,180,148,.05);--emeD:rgba(108,180,148,.10);
+  --ylw:#d4b000;--ylwB:rgba(212,176,0,.07);--ylwD:rgba(212,176,0,.18);
   --sh:0 1px 3px rgba(0,0,0,.3);--shm:0 3px 10px rgba(0,0,0,.3);
 }
 
@@ -125,6 +127,7 @@ tr.click{cursor:pointer}tr.click:active td{background:var(--s3)}
 .b-red{background:var(--redB);color:var(--red);border:1px solid var(--redD)}
 .b-blu{background:var(--bluB);color:var(--blu);border:1px solid var(--bluD)}
 .b-amb{background:var(--ambB);color:var(--amb);border:1px solid var(--ambD)}
+.b-ylw{background:var(--ylwB);color:var(--ylw);border:1px solid var(--ylwD)}
 .v-pos{color:var(--grn)}.v-neg{color:var(--red)}.v-zero{color:var(--txm)}.v-blu{color:var(--blu)}.v-amb{color:var(--amb)}.v-eme{color:var(--eme)}
 
 /* ═══════ STATUS CARDS ═══════ */
@@ -184,6 +187,16 @@ summary::before{content:'+ ';color:var(--txm);font-weight:400}
 details[open] summary::before{content:'- '}
 .note{font-size:10px;color:var(--txm);border-left:2px solid var(--bd);padding-left:9px;margin-bottom:13px;line-height:1.7}
 
+/* ═══════ ESTADO VAZIO ═══════ */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 16px;color:var(--txm);gap:10px;text-align:center}
+.empty-state svg{opacity:.25;width:40px;height:40px;flex-shrink:0}
+.empty-state-title{font-size:13px;font-weight:600;color:var(--txd);margin:0}
+.empty-state-sub{font-size:12px;color:var(--txm);margin:0;line-height:1.5}
+.empty-cell{text-align:center;padding:32px 16px !important;color:var(--txm);font-size:12px}
+
+/* ═══════ GRADE DE DESTAQUE (4 KPIs) ═══════ */
+.kpi-hl{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+
 /* ═══════════ RESPONSIVE ═══════════ */
 
 @media(min-width:1400px){.content{padding:22px 26px}.kpi-grid{gap:12px}.kpi{padding:18px}.kpi-value{font-size:18px}}
@@ -193,7 +206,7 @@ details[open] summary::before{content:'- '}
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
   .main{margin-left:0}.burger{display:flex}
-  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .kpi-grid,.kpi-hl{grid-template-columns:repeat(2,1fr)}
   .g2,.g21{grid-template-columns:1fr}
   .content{padding:14px}
 }
@@ -236,4 +249,38 @@ details[open] summary::before{content:'- '}
 @media(max-height:500px) and (orientation:landscape){
   .bnav{display:none}.content{padding-bottom:14px}
   .sidebar{width:210px}.modal{max-height:96dvh}
+}
+
+/* ══════════════════════════════════════════════════════
+   MOBILE & TABLET — ajustes não destrutivos
+   Nenhuma regra afeta layout em telas ≥ 901px.
+   ══════════════════════════════════════════════════════ */
+
+/* Scroll horizontal explícito nas tabelas —
+   colunas não quebram, o container desliza lateralmente */
+.scroll-t { overflow-x: auto }
+
+/* ─── ≤ 900px: touch targets mínimos de 44px ─── */
+@media(max-width:900px) {
+  /* Hamburguer: alvo de toque quadrado */
+  .burger  { min-width:44px; min-height:44px; align-items:center; justify-content:center }
+  /* Botões de tema e sync na sidebar */
+  .sb-btn  { min-height:44px }
+  /* Links de navegação da sidebar */
+  .sb-link { min-height:44px }
+  /* Botão fechar modal */
+  .modal-x { min-width:44px; min-height:44px; align-items:center; justify-content:center }
+  /* Abas Todos / SF / SJ: padding maior, altura mínima, sem cortar texto */
+  .tab     { min-height:36px; padding-left:12px; padding-right:12px }
+}
+
+/* ─── ≤ 768px: 16px em inputs previne zoom automático no iOS Safari ─── */
+@media(max-width:768px) {
+  .search-bar input { font-size:16px }
+  .filter-select    { font-size:16px; min-height:44px }
+}
+
+/* ─── ≤ 640px: bottom nav com área de toque garantida ─── */
+@media(max-width:640px) {
+  .bnav-btn { min-height:44px; padding-top:8px }
 }
