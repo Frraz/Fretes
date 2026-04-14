@@ -237,3 +237,37 @@ details[open] summary::before{content:'- '}
   .bnav{display:none}.content{padding-bottom:14px}
   .sidebar{width:210px}.modal{max-height:96dvh}
 }
+
+/* ══════════════════════════════════════════════════════
+   MOBILE & TABLET — ajustes não destrutivos
+   Nenhuma regra afeta layout em telas ≥ 901px.
+   ══════════════════════════════════════════════════════ */
+
+/* Scroll horizontal explícito nas tabelas —
+   colunas não quebram, o container desliza lateralmente */
+.scroll-t { overflow-x: auto }
+
+/* ─── ≤ 900px: touch targets mínimos de 44px ─── */
+@media(max-width:900px) {
+  /* Hamburguer: alvo de toque quadrado */
+  .burger  { min-width:44px; min-height:44px; align-items:center; justify-content:center }
+  /* Botões de tema e sync na sidebar */
+  .sb-btn  { min-height:44px }
+  /* Links de navegação da sidebar */
+  .sb-link { min-height:44px }
+  /* Botão fechar modal */
+  .modal-x { min-width:44px; min-height:44px; align-items:center; justify-content:center }
+  /* Abas Todos / SF / SJ: padding maior, altura mínima, sem cortar texto */
+  .tab     { min-height:36px; padding-left:12px; padding-right:12px }
+}
+
+/* ─── ≤ 768px: 16px em inputs previne zoom automático no iOS Safari ─── */
+@media(max-width:768px) {
+  .search-bar input { font-size:16px }
+  .filter-select    { font-size:16px; min-height:44px }
+}
+
+/* ─── ≤ 640px: bottom nav com área de toque garantida ─── */
+@media(max-width:640px) {
+  .bnav-btn { min-height:44px; padding-top:8px }
+}
