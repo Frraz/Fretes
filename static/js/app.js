@@ -1,6 +1,7 @@
 // ─── Estado global ────────────────────────────────────────────────────────────
 let G = 'ALL';       // Filtro de grupo ativo: 'ALL' | 'SF' | 'SJ'
 let P = 'dashboard'; // Página atualmente exibida
+let dashRows = [];   // Cache de todos os motoristas para filtragem local no dashboard
 
 const SYNC = 5 * 60 * 1000; // Intervalo de auto-sincronização: 5 minutos
 
@@ -194,6 +195,31 @@ function load() {
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────
 
 /**
+ * Filtra e renderiza as linhas da tabela do dashboard em memória,
+ * sem nenhuma requisição ao servidor. Lê os valores de:
+ *   #dash-q   — busca livre por nome ou placa
+ *   #dash-sit — filtro de situação (EM ABERTO / FECHADO / Todos)
+ */
+function renderDashTable() {
+  const q   = (document.getElementById('dash-q')?.value  || '').toLowerCase();
+  const sit = document.getElementById('dash-sit')?.value || '';
+
+  let rows = dashRows;
+  if (q)               rows = rows.filter(x => (x.motorista + ' ' + x.placa).toLowerCase().includes(q));
+  if (sit === 'ativo') rows = rows.filter(x => x.situacao !== 'QUITADO');
+  if (sit === 'quit')  rows = rows.filter(x => x.situacao === 'QUITADO');
+
+  const ct = document.getElementById('dash-count');
+  if (ct) ct.textContent = rows.length;
+
+  const tbody = document.getElementById('dash-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = rows.length
+    ? rows.map(x => `<tr class="click" onclick="openMot(${x.id},'${esc(x.motorista)}','${x.placa}')"><td class="mono tb">${x.placa}</td><td>${x.motorista}</td><td class="mono tr">${x.romaneios ? fmt(x.romaneios) : '—'}</td><td class="mono tr v-amb">${x.abastecimentos ? fmt(x.abastecimentos) : '—'}</td><td class="mono tr v-neg">${x.adiantamentos ? fmt(x.adiantamentos) : '—'}</td><td class="mono tr tb ${vc(x.saldo)}">${x.saldo < 0 ? '- ' : ''}${fmt(x.saldo)}</td><td class="tc">${sitB(x.situacao)}</td></tr>`).join('')
+    : `<tr><td colspan="7" class="empty-cell">Nenhum motorista para os filtros aplicados.</td></tr>`;
+}
+
+/**
  * Carrega o painel geral: KPIs globais, distribuição de situações,
  * barras de saldo por motorista, lista de devedores e tabela completa.
  */
@@ -211,6 +237,9 @@ async function loadDash() {
   const s  = [...a].sort((a, b) => b.saldo - a.saldo);
   const d  = s.filter(x => x.situacao === 'DEVEDOR').reverse();
   const mx = Math.max(...a.map(x => Math.abs(x.saldo)), 1);
+
+  // Armazena TODOS os motoristas (incluindo quitados) para filtragem local na tabela
+  dashRows = [...r.resumo].sort((a, b) => b.saldo - a.saldo);
 
   document.getElementById('content').innerHTML = `
 <div class="kpi-hl">
@@ -251,12 +280,27 @@ async function loadDash() {
       : `<div class="scroll-t">${d.map((x, i) => `<div style="padding:9px;border-bottom:1px solid var(--bd);${i === 0 ? 'background:var(--redB)' : ''};cursor:pointer" onclick="openMot(${x.id},'${esc(x.motorista)}','${x.placa}')"><div style="display:flex;justify-content:space-between;align-items:center;gap:5px"><div style="min-width:0"><div style="font-weight:600;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.motorista}</div><div class="mono" style="font-size:10px;color:var(--txm);margin-top:1px">${x.placa}</div></div><div class="mono v-neg" style="font-size:12px;font-weight:600;flex-shrink:0">- ${fmt(Math.abs(x.saldo))}</div></div>${x.adiantamentos > 0 ? `<div style="font-size:10px;color:var(--amb);margin-top:2px">Adiant: ${fmt(x.adiantamentos)}</div>` : ''}</div>`).join('')}</div>`}
   </div>
 </div>
-<div class="card"><div class="card-h"><div class="card-t"><div class="dot pur"></div>Tabela Completa</div></div>
-  <div class="search-bar">${SI}<input placeholder="Buscar..." oninput="filt(this,'td')"></div>
+<div class="card">
+  <div class="card-h"><div class="card-t"><div class="dot pur"></div>Tabela Completa</div><div class="card-badge" id="dash-count"></div></div>
+  <div class="filter-row">
+    <select class="filter-select" id="dash-sit" onchange="renderDashTable()">
+      <option value="ativo">EM ABERTO</option>
+      <option value="">Todos</option>
+      <option value="quit">FECHADO</option>
+    </select>
+    <select class="filter-select" id="dash-g" onchange="setGrupo(this.value||'ALL')">
+      <option value="" ${G === 'ALL' ? 'selected' : ''}>Ambas fazendas</option>
+      <option value="SF" ${G === 'SF' ? 'selected' : ''}>SF — Sagrada Família</option>
+      <option value="SJ" ${G === 'SJ' ? 'selected' : ''}>SJ — São José</option>
+    </select>
+  </div>
+  <div class="search-bar">${SI}<input id="dash-q" placeholder="Buscar motorista ou placa..." oninput="renderDashTable()"></div>
   <div class="scroll-t" style="max-height:440px"><table id="td"><thead><tr><th>Placa</th><th>Motorista</th><th class="tr">Rom.</th><th class="tr">Abast.</th><th class="tr">Adiant.</th><th class="tr">Saldo</th><th class="tc">Sit.</th></tr></thead>
-  <tbody>${s.map(x => `<tr class="click" onclick="openMot(${x.id},'${esc(x.motorista)}','${x.placa}')"><td class="mono tb">${x.placa}</td><td>${x.motorista}</td><td class="mono tr">${x.romaneios ? fmt(x.romaneios) : '—'}</td><td class="mono tr v-amb">${x.abastecimentos ? fmt(x.abastecimentos) : '—'}</td><td class="mono tr v-neg">${x.adiantamentos ? fmt(x.adiantamentos) : '—'}</td><td class="mono tr tb ${vc(x.saldo)}">${x.saldo < 0 ? '- ' : ''}${fmt(x.saldo)}</td><td class="tc">${sitB(x.situacao)}</td></tr>`).join('')}</tbody>
+  <tbody id="dash-tbody"></tbody>
   <tfoot><tr style="border-top:2px solid var(--bd)"><td colspan="2" class="tb">TOTAL</td><td class="mono tr tb v-blu">${fmt(k.total_romaneios)}</td><td class="mono tr tb v-amb">${fmt(k.total_abastecimentos)}</td><td class="mono tr tb v-neg">${fmt(k.total_adiantamentos)}</td><td class="mono tr tb ${vc(k.saldo_liquido)}">${k.saldo_liquido < 0 ? '- ' : ''}${fmt(k.saldo_liquido)}</td><td></td></tr></tfoot></table></div>
 </div>`;
+  // Popula a tabela com os filtros padrão logo após o DOM ser atualizado
+  renderDashTable();
 }
 
 // ─── MODAL DE MOTORISTA ───────────────────────────────────────────────────────
