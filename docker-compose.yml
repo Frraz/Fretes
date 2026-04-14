@@ -73,7 +73,7 @@ services:
     <<: *default-restart
     env_file: .env.prod
     volumes:
-      - static_volume:/app/staticfiles
+      - /var/www/docker-instances/Fretes/staticfiles:/app/staticfiles
     tmpfs:
       - /tmp:size=32m,mode=1777
     ports:
