@@ -116,8 +116,6 @@ services:
 volumes:
   postgres_data:
     driver: local
-  static_volume:
-    driver: local
 
 networks:
   fretes_net:
